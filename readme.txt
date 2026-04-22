@@ -1,0 +1,1 @@
+在app和bootloader程序中全局搜索LOCAL_DEVICE_ID这个宏定义，根据通信协议修改成对应的设备ID号码。

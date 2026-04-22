@@ -1,0 +1,22 @@
+Dependencies for Project 'AT32F415RBT7_WorkBench', Target 'AT32F415RBT7_WorkBench': (DO NOT MODIFY !)
+CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARM_Compiler_5.06u7
+F (..\src\main.c)(0x69E71189)(--c99 -c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_sections -I ..\..\libraries\drivers\inc -I ..\..\libraries\cmsis\cm4\core_support -I ..\..\libraries\cmsis\cm4\device_support -I ..\inc-IC:\Users\Administrator\AppData\Local\Arm\Packs\ArteryTek\AT32F415_DFP\2.1.6\Device\Include-D__UVISION_VERSION="538" -DAT32F415RBT7 -DAT32F415RBT7 -DUSE_STDPERIPH_DRIVER-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (..\inc\at32f415_wk_config.h)(0x68BF851B)
+F (..\src\at32f415_wk_config.c)(0x69E71189)()
+F (..\src\at32f415_int.c)(0x69E71189)()
+F (..\src\wk_system.c)(0x69E71189)()
+F (..\src\wk_crc.c)(0x69E71189)()
+F (..\src\wk_debug.c)(0x69E71189)()
+F (..\src\wk_usart.c)(0x69E71189)()
+F (..\src\iap.c)(0x68D518A4)()
+F (..\src\flash.c)(0x68D518A4)()
+F (..\..\libraries\drivers\src\at32f415_crc.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_crm.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_debug.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_flash.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_gpio.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_misc.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_pwc.c)(0x697731D9)()
+F (..\..\libraries\drivers\src\at32f415_usart.c)(0x697731D9)()
+F (..\..\libraries\cmsis\cm4\device_support\system_at32f415.c)(0x697731D9)()
+F (.\startup_at32f415.s)(0x69E71188)()
