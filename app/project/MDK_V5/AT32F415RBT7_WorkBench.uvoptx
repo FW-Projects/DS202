@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>4</nTsel>
+        <nTsel>3</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -114,7 +114,7 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon>Segger\JL2CM3.dll</pMon>
+        <pMon>BIN\CMSIS_AGDI.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
@@ -174,7 +174,7 @@
           <Type>0</Type>
           <LineNumber>118</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134246360</Address>
+          <Address>134245960</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -188,18 +188,18 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>307</LineNumber>
+          <LineNumber>222</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134256786</Address>
+          <Address>134254514</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\app\flash_handle.c</Filename>
+          <Filename>..\app\ec11_handle.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\AT32F415RBT7_WorkBench\../app/flash_handle.c\307</Expression>
+          <Expression>\\AT32F415RBT7_WorkBench\../app/ec11_handle.c\222</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -247,6 +247,16 @@
           <count>8</count>
           <WinNumber>1</WinNumber>
           <ItemText>sFWDS201_t.system_parameter.sol_pwm_out</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>set_time</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sFWDS201_t.temp_unit</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

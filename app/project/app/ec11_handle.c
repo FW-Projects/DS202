@@ -117,13 +117,15 @@ void air_temp_ec11_get_event(EC11_AnalyzeResult state)
 		if (sFWDS201_t.set_flag == true)
 		{
 			sFWDS201_t.set_interface_number++;
-			if (sFWDS201_t.set_interface_number > 9)
+			if (sFWDS201_t.set_interface_number > 10)
 				sFWDS201_t.set_interface_number = 0;
+			set_time = SET_TIME;
 		}
 		else
 		{
 			air_temp_ec11_event = AIR_TEMP_ADD;
 		}
+		
 		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_CCW:
@@ -131,15 +133,17 @@ void air_temp_ec11_get_event(EC11_AnalyzeResult state)
 		{
 			if (sFWDS201_t.set_interface_number == 0)
 			{
-				sFWDS201_t.set_interface_number = 9;
+				sFWDS201_t.set_interface_number = 10;
 			}
 			else
 				sFWDS201_t.set_interface_number--;
+			set_time = SET_TIME;
 		}
 		else
 		{
 			air_temp_ec11_event = AIR_TEMP_REDUCE;
 		}
+		
 		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_FAST_CW:
@@ -179,6 +183,7 @@ void air_temp_ec11_get_event(EC11_AnalyzeResult state)
 			{
 				sFWDS201_t.set_flag = true;
 				sFWDS201_t.set_interface_number = EXIT;
+				set_time = SET_TIME;
 			}
 			else
 			{
@@ -264,7 +269,9 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 			case SET_SLEEP_TIME:
 				sol_temp_ec11_event = SOL_SLEEP_TIME_ADD;
 				break;
-			case VISION:
+			case SOFTWARE_VERSION:
+				break;
+			case HARDWARE_VERSION:
 				break;
 			case RESET_RUN:
 				break;
@@ -303,7 +310,9 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 			case SET_SLEEP_TIME:
 				sol_temp_ec11_event = SOL_SLEEP_TIME_REDUCE;
 				break;
-			case VISION:
+			case SOFTWARE_VERSION:
+				break;
+			case HARDWARE_VERSION:
 				break;
 			case RESET_RUN:
 				break;
@@ -346,7 +355,9 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 			case SET_SLEEP_TIME:
 				sol_temp_ec11_event = SOL_SLEEP_TIME_ADD_FIVE;
 				break;
-			case VISION:
+			case SOFTWARE_VERSION:
+				break;
+			case HARDWARE_VERSION:
 				break;
 			case RESET_RUN:
 				break;
@@ -385,8 +396,11 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 			case SET_SLEEP_TIME:
 				sol_temp_ec11_event = SOL_SLEEP_TIME_REDUCE_FIVE;
 				break;
-			case VISION:
+			case SOFTWARE_VERSION:
 				break;
+			case HARDWARE_VERSION:
+				break;
+			
 			case RESET_RUN:
 				break;
 			}
@@ -950,7 +964,7 @@ void air_temp_ec11_event_handle(void)
 			{
 				sFWDS201_t.system_parameter.air_last_set_temp = 0;
 				sFWDS201_t.system_parameter.air_set_temp = MAX_SET_AIR_TEMP;
-			}
+			} 
 			else
 			{
 				sFWDS201_t.system_parameter.air_set_temp += 10;
@@ -1105,14 +1119,14 @@ void air_temp_ec11_event_handle(void)
 		
 		if (sFWDS201_t.temp_unit == CELSIUS)
 		{
-			sFWDS201_t.temp_unit = FAHRENHEIT;
+//			sFWDS201_t.temp_unit = FAHRENHEIT;
 			sFWDS201_t.system_parameter.sol_set_temp_f_display = 9 * sFWDS201_t.system_parameter.sol_set_temp / 5 + 32;
 			sFWDS201_t.system_parameter.air_set_temp_f_display = 9 * sFWDS201_t.system_parameter.air_set_temp / 5 + 32;
 
 		}
 		else if (sFWDS201_t.temp_unit == FAHRENHEIT)
 		{
-			sFWDS201_t.temp_unit = CELSIUS;
+//			sFWDS201_t.temp_unit = CELSIUS;
 			sFWDS201_t.system_parameter.sol_set_temp = (sFWDS201_t.system_parameter.sol_set_temp_f_display - 32) * 5 / 9;
 			sFWDS201_t.system_parameter.air_set_temp = (sFWDS201_t.system_parameter.air_set_temp_f_display - 32) * 5 / 9;
 		}

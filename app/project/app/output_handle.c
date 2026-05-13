@@ -263,7 +263,7 @@ void fan_control(DS201_Handle *this)
 			{
 				if (fan_run_flag == false)
 				{
-					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, 50);
+					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, 80);
 				}
 			}
 			else
@@ -296,7 +296,7 @@ void fan_control(DS201_Handle *this)
 				if (fan_run_flag == false)
 				{
 					/* open fan output with a half of max set val*/
-					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 2.26 + 30);
+					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 0.87 + 81);
 				}
 			}
 			else if (this->system_parameter.air_actual_temp >= 70 && this->system_parameter.air_actual_temp < 250)
@@ -305,7 +305,7 @@ void fan_control(DS201_Handle *this)
 				{
 					/* open fan output with actual temp change*/
 					this->system_parameter.sleep_air_data = this->system_parameter.air_actual_temp * 0.4;
-					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 2.26 + 30);
+					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 0.87 + 81);
 				}
 			}
 			else
@@ -330,14 +330,14 @@ void fan_control(DS201_Handle *this)
 			}
 
 			/* open fan output with user set val */
-			tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.air_data * 2.26 + 30);
+			tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.air_data * 0.87 + 81);
 		}
 
 		break;
 
 	case 1:
 		/* open fan output with max set val */
-		tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, MAX_SET_AIR * 2.26 + 30);
+		tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, MAX_SET_AIR * 0.87 + 81);
 
 		if (this->airgun_handle_error_state == HANDLE_OK)
 		{
@@ -663,12 +663,12 @@ void sol_sleep_control(void)
 			first_sleep = true;
 			// 立即进入休眠状态（PWM 停止加热）
 			sFWDS201_t.sol_work_handle_state = HANDLE_SLEEP;
-
-			// 只有温度 <200 才显示 SLP
-			if (temp_below_200)
-			{
-				sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
-			}
+			sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
+//			// 只有温度 <200 才显示 SLP
+//			if (temp_below_200)
+//			{
+//				sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
+//			}
 		}
 		else
 		{
@@ -684,7 +684,7 @@ void sol_sleep_control(void)
 					{
 						sFWDS201_t.system_parameter.sleep_time_count-=0.1;
 						if(sFWDS201_t.system_parameter.sleep_time_count <= 0)
-							sFWDS201_t.system_parameter.sleep_time_count = 0;
+						sFWDS201_t.system_parameter.sleep_time_count = 0;
 						time_count_s = 0;
 					}
 				}
@@ -755,8 +755,8 @@ void sol_sleep_control(void)
 				sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
 			}
 			else
-				sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
-		}
+	 			sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 	}
 }
 
@@ -811,7 +811,7 @@ void get_sol_handle_state(void)
 		sleep_times = 0;
 		if (no_sleep_times > 3)
 		{
-			no_sleep_times = 0;
+			no_sleep_times = 0; 
 			sFWDS201_t.sol_handle_position = NOT_IN_POSSITION;
 			last_position_state = sFWDS201_t.sol_handle_position;
 		}
@@ -862,7 +862,7 @@ static void get_sol_handle_error_state(void)
 					sFWDS201_t.sol_handle_error_state = HANDLE_NO_ERR;
 					sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
 				}
-				else if (sFWDS201_t.system_parameter.sol_actual_temp > MAX_ACTUAL_TEMP )
+				else if (sFWDS201_t.system_parameter.sol_actual_temp > MAX_ACTUAL_TEMP)
 				{
 					sFWDS201_t.sol_handle_error_state = HANDLE_OVER_TEMP_ERR;
 					sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;

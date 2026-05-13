@@ -17,24 +17,28 @@ Library Manager: ArmAr.exe V6.23
 Hex Converter:   FromElf.exe V6.23
 CPU DLL:         SARMCM3.DLL V5.42.0.0
 Dialog DLL:      DCM.DLL V1.17.5.0
-Target DLL:      Segger\JL2CM3.dll V2.99.45.0
+Target DLL:      CMSIS_AGDI.dll V1.33.22.0
 Dialog DLL:      TCM.DLL V1.56.6.0
  
 <h2>Project:</h2>
 D:\AT32_project\DS201\app\project\MDK_V5\AT32F415RBT7_WorkBench.uvprojx
-Project File Date:  04/21/2026
+Project File Date:  05/11/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.23', folder: 'D:\keil5.42\ARM\ARMCLANG\Bin'
 Build target 'AT32F415RBT7_WorkBench'
+compiling key_handle.c...
+linking...
+Program Size: Code=51048 RO-data=492 RW-data=584 ZI-data=6072  
+FromELF: creating hex file...
 After Build - User command #1: fromelf.exe --bin --output .\Listings\AT32F415RBT7_WorkBench.bin .\objects\AT32F415RBT7_WorkBench.axf
 After Build - User command #2: C:\Users\Administrator\Desktop\keil5_disp_size_bar.exe
 ram:
   RW_IRAM1 :0x20000000
-   32.00 KB :|¡ö¡ö¡ö_________________|   19.68 % (    6.30 KB /    32.00 KB) [26320 B]
+   32.00 KB :|¡ö¡ö¡ö¡ö________________|   20.31 % (    6.50 KB /    32.00 KB) [26112 B]
 flash:
   ER_IROM1 :0x8004000
-  128.00 KB :|¡ö¡ö¡ö¡ö¡ö_______________|   27.68 % (   35.43 KB /   128.00 KB) [94788 B]
+  128.00 KB :|¡ö¡ö¡ö¡ö¡ö¡ö¡ö_____________|   39.32 % (   50.33 KB /   128.00 KB) [79532 B]
 ".\objects\AT32F415RBT7_WorkBench.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -98,11 +102,11 @@ Package Vendor: GorgonMeducer
       Include file:  include/retarget_stdout.h
 
    * Component: GorgonMeducer::Utilities:perf_counter:Core&Source@2.4.0
-      Source file:   perfc_port_default.c
-      Source file:   systick_wrapper_gnu.s
       Source file:   perf_counter.c
       Include file:  perf_counter.h
-Build Time Elapsed:  00:00:00
+      Source file:   systick_wrapper_gnu.s
+      Source file:   perfc_port_default.c
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

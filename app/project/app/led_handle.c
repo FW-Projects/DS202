@@ -538,7 +538,7 @@ void dispmenu_pageoption(uint8_t in_number)
 		case 0:
 		{
 			TAST[buffer_disp_set[0]]();
-			if (sFWDS201_t.set_interface_number == VISION)
+			if (sFWDS201_t.set_interface_number == SOFTWARE_VERSION || sFWDS201_t.set_interface_number == HARDWARE_VERSION)
 			{
 				gpio_bits_reset(GPIOB, LEDDP_PIN);
 			}
@@ -548,7 +548,7 @@ void dispmenu_pageoption(uint8_t in_number)
 		case 1:
 		{
 			TAST[buffer_disp_set[1]]();
-			if (sFWDS201_t.set_interface_number == VISION)
+			if (sFWDS201_t.set_interface_number == SOFTWARE_VERSION || sFWDS201_t.set_interface_number == HARDWARE_VERSION)
 			{
 				gpio_bits_reset(GPIOB, LEDDP_PIN);
 			}
@@ -591,13 +591,19 @@ void dispmenu_pageoption(uint8_t in_number)
 		}
 		case 7:
 		{
-			TAST[0]();
+			if(in_number == 0x0c)
+				TAST[1]();
+			else
+				TAST[0]();
 			gpio_bits_reset(GUN_TAMP_SHI_PORT, GUN_TAMP_SHI_PIN);
 			break;
 		}
 		case 8:
 		{
-			TAST[in_number]();
+			if(in_number == 0x0c)
+				TAST[0]();
+			else
+				TAST[in_number]();
 			gpio_bits_reset(GUN_TAMP_GE_PORT, GUN_TAMP_GE_PIN);
 			break;
 		}
@@ -695,10 +701,15 @@ void Disp_Set_Handle(uint8_t menu_number)
 			buffer_disp_set[1] = (sleep_time / 10) % 10; 
 			buffer_disp_set[2] = sleep_time % 10; 
 			break;
-		case VISION:
-			buffer_disp_set[0] = VISION_BAI;
-			buffer_disp_set[1] = VISION_SHI;
-			buffer_disp_set[2] = VISION_GE;
+		case SOFTWARE_VERSION:
+			buffer_disp_set[0] = SOFTWARE_VERSION_BAI;
+			buffer_disp_set[1] = SOFTWARE_VERSION_SHI;
+			buffer_disp_set[2] = SOFTWARE_VERSION_GE;
+			break;
+		case HARDWARE_VERSION:
+			buffer_disp_set[0] = HARDWARE_VERSION_BAI;
+			buffer_disp_set[1] = HARDWARE_VERSION_SHI;
+			buffer_disp_set[2] = HARDWARE_VERSION_GE;
 			break;
 		case RESET_RUN:
 			buffer_disp_set[0] = 15;

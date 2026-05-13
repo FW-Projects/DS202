@@ -18,9 +18,9 @@ void FWDS201_Init(DS201_Handle *FWDS201)
 	FWDS201->system_parameter.air_cal_data = 0,
 	FWDS201->system_parameter.air_cal_temp_c_display = 0,
 	FWDS201->system_parameter.air_cal_temp_f_display = 0,
-	FWDS201->air_handle_position = NOT_IN_POSSITION,
+	FWDS201->air_handle_position = IN_POSSITION,
 	FWDS201->airgun_handle_error_state = HANDLE_OK,
-	FWDS201->air_work_handle_state = HANDLE_WORKING;
+	FWDS201->air_work_handle_state = HANDLE_SLEEP;
 
 	FWDS201->system_parameter.set_sleep_time = 0x00;
 	/* end the  Direct handle init of*/

@@ -41,6 +41,7 @@ static void get_key(void)
         if (key_event[0] == KE_PRESS)
         {
             sFWDS201_t.system_parameter.air_set_temp = sFWDS201_t.system_parameter.ch1_air_set_temp;
+			sFWDS201_t.system_parameter.air_set_temp_f_display = (sFWDS201_t.system_parameter.air_set_temp * 9 / 5) + 32;
             sFWDS201_t.system_parameter.air_data = sFWDS201_t.system_parameter.ch1_set_air;
             sFWDS201_t.general_parameter.air_ch = 1;
             sFWDS201_t.display_air_temp_number = DISPLAY_SET;
@@ -57,6 +58,7 @@ static void get_key(void)
         else if (key_event[1] == KE_PRESS)
         {
             sFWDS201_t.system_parameter.air_set_temp = sFWDS201_t.system_parameter.ch2_air_set_temp;
+			sFWDS201_t.system_parameter.air_set_temp_f_display = (sFWDS201_t.system_parameter.air_set_temp * 9 / 5) + 32;
             sFWDS201_t.system_parameter.air_data = sFWDS201_t.system_parameter.ch2_set_air;
             sFWDS201_t.general_parameter.air_ch = 2;
             sFWDS201_t.display_air_temp_number = DISPLAY_SET;
@@ -73,6 +75,7 @@ static void get_key(void)
         else if (key_event[2] == KE_PRESS)
         {
             sFWDS201_t.system_parameter.air_set_temp = sFWDS201_t.system_parameter.ch3_air_set_temp;
+			sFWDS201_t.system_parameter.air_set_temp_f_display = (sFWDS201_t.system_parameter.air_set_temp * 9 / 5) + 32;
             sFWDS201_t.system_parameter.air_data = sFWDS201_t.system_parameter.ch3_set_air;
             sFWDS201_t.general_parameter.air_ch = 3;
             sFWDS201_t.display_air_temp_number = DISPLAY_SET;
@@ -90,6 +93,7 @@ static void get_key(void)
         if (key_event[3] == KE_PRESS)
         {
             sFWDS201_t.system_parameter.sol_set_temp = sFWDS201_t.system_parameter.ch1_sol_set_temp;
+			sFWDS201_t.system_parameter.sol_set_temp_f_display = (sFWDS201_t.system_parameter.sol_set_temp * 9 / 5) + 32;
             sFWDS201_t.general_parameter.sol_ch = 1;
             sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
             sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES;
@@ -102,6 +106,7 @@ static void get_key(void)
         else if (key_event[4] == KE_PRESS)
         {
             sFWDS201_t.system_parameter.sol_set_temp = sFWDS201_t.system_parameter.ch2_sol_set_temp;
+			sFWDS201_t.system_parameter.sol_set_temp_f_display = (sFWDS201_t.system_parameter.sol_set_temp * 9 / 5) + 32;
             sFWDS201_t.general_parameter.sol_ch = 2;
             sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
             sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES;
@@ -114,6 +119,7 @@ static void get_key(void)
         else if (key_event[5] == KE_PRESS)
         {
             sFWDS201_t.system_parameter.sol_set_temp = sFWDS201_t.system_parameter.ch3_sol_set_temp;
+			sFWDS201_t.system_parameter.sol_set_temp_f_display = (sFWDS201_t.system_parameter.sol_set_temp * 9 / 5) + 32;
             sFWDS201_t.general_parameter.sol_ch = 3;
             sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
             sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES;
