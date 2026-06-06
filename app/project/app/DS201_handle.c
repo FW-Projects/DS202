@@ -67,11 +67,13 @@ void FWDS201_Init(DS201_Handle *FWDS201)
 	FWDS201->general_parameter.set_air_time = 0x00;
 	FWDS201->general_parameter.save_air_ch_flag = false;
 	FWDS201->general_parameter.save_sol_ch_flag = false;
-	FWDS201->general_parameter.dp_flash_flag = false;
+	FWDS201->general_parameter.air_dp_flash_flag = false;
+	FWDS201->general_parameter.sol_dp_flash_flag = false;
 	FWDS201->set_flag = false;
 	FWDS201->set_interface_number = EXIT;
 	FWDS201->fan_run_flag = true;
 	FWDS201->relay_open_flag = false;
-	FWDS201->hot_state = FULL_POWER;
+	FWDS201->air_hot_state = FULL_POWER;
+	FWDS201->sol_hot_state = FULL_POWER;
 	FWDS201->init_flag = false;
 }

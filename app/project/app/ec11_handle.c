@@ -161,15 +161,15 @@ void air_temp_ec11_get_event(EC11_AnalyzeResult state)
 		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_SHORT_CLICK:
-		if (sFWDS201_t.set_interface_number == EXIT)
-		{
-			air_temp_ec11_event = EXIT_SET;
-		}
-		else if (sFWDS201_t.set_interface_number == RESET_RUN)
-		{
-			air_temp_ec11_event = RESET_DS01_VALUE;
-		}
-		sbeep.cmd = BEEP_SHORT;
+//		if (sFWDS201_t.set_interface_number == EXIT)
+//		{
+//			air_temp_ec11_event = EXIT_SET;
+//		}
+//		else if (sFWDS201_t.set_interface_number == RESET_RUN)
+//		{
+//			air_temp_ec11_event = RESET_DS01_VALUE;
+//		}
+//		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_DOUBLE_CLICK:
 
@@ -408,6 +408,15 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_SHORT_CLICK:
+		if (sFWDS201_t.set_interface_number == EXIT)
+		{
+			air_temp_ec11_event = EXIT_SET;
+		}
+		else if (sFWDS201_t.set_interface_number == RESET_RUN)
+		{
+			air_temp_ec11_event = RESET_DS01_VALUE;
+		}
+		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_DOUBLE_CLICK:
 

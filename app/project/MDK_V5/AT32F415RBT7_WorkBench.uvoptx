@@ -168,95 +168,32 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0AT32F415_128 -FS08000000 -FL00020000 -FP0($$Device:-AT32F415RBT7$Flash\AT32F415_128.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>118</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134245960</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\src\at32f415_int.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\AT32F415RBT7_WorkBench\../src/at32f415_int.c\118</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>222</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134254514</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\app\ec11_handle.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\AT32F415RBT7_WorkBench\../app/ec11_handle.c\222</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.display_sol_temp_number</ItemText>
+          <ItemText>sFWDS201_t.general_parameter.set_air_time</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.display_air_temp_number</ItemText>
+          <ItemText>sFWDS201_t.display_air_number</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.sol_work_handle_state</ItemText>
+          <ItemText>sFWDS201_t.system_parameter.air_set_temp</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.system_parameter.waken_time_count</ItemText>
+          <ItemText>sFWDS201_t.system_parameter.air_cal_data</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.system_parameter.air_set_temp</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.system_parameter.air_set_temp_f_display</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.system_parameter.sol_set_temp</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.system_parameter.sol_set_temp_f_display</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.system_parameter.sol_pwm_out</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>set_time</ItemText>
-        </Ww>
-        <Ww>
-          <count>10</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sFWDS201_t.temp_unit</ItemText>
+          <ItemText>sFWDS201_t.general_parameter.set_sol_temp_time</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

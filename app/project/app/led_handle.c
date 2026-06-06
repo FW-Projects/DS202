@@ -227,6 +227,28 @@ void disp_digit_all(void)
 		case 2:
 		{
 			TAST_BUFF[buffer_disp_sol_temp[2]]();
+			if (sFWDS201_t.sol_handle_position == NOT_IN_POSSITION &&
+				sFWDS201_t.sol_work_handle_state == HANDLE_WORKING &&
+				sFWDS201_t.sol_handle_error_state == HANDLE_OK)
+			{
+				if (sFWDS201_t.sol_hot_state == FULL_POWER)
+				{
+					gpio_bits_reset(GPIOB, LEDDP_PIN);
+				}
+				else if (sFWDS201_t.sol_hot_state == ZERO_POWER)
+				{
+					gpio_bits_set(GPIOB, LEDDP_PIN);
+				}
+				else if (sFWDS201_t.sol_hot_state == PID_POWER)
+				{
+					if (sFWDS201_t.general_parameter.sol_dp_flash_flag)
+						gpio_bits_set(GPIOB, LEDDP_PIN);
+					else
+						gpio_bits_reset(GPIOB, LEDDP_PIN);
+				}
+			}
+			else
+				gpio_bits_set(GPIOB, LEDDP_PIN);
 			gpio_bits_reset(SOL_TAMP_GE_PORT, SOL_TAMP_GE_PIN);
 			break;
 		}
@@ -275,17 +297,17 @@ void disp_digit_all(void)
 				sFWDS201_t.air_work_handle_state == HANDLE_WORKING &&
 				sFWDS201_t.airgun_handle_error_state == HANDLE_OK)
 			{
-				if (sFWDS201_t.hot_state == FULL_POWER)
+				if (sFWDS201_t.air_hot_state == FULL_POWER)
 				{
 					gpio_bits_reset(GPIOB, LEDDP_PIN);
 				}
-				else if (sFWDS201_t.hot_state == ZERO_POWER)
+				else if (sFWDS201_t.air_hot_state == ZERO_POWER)
 				{
 					gpio_bits_set(GPIOB, LEDDP_PIN);
 				}
-				else if (sFWDS201_t.hot_state == PID_POWER)
+				else if (sFWDS201_t.air_hot_state == PID_POWER)
 				{
-					if (sFWDS201_t.general_parameter.dp_flash_flag)
+					if (sFWDS201_t.general_parameter.air_dp_flash_flag)
 						gpio_bits_set(GPIOB, LEDDP_PIN);
 					else
 						gpio_bits_reset(GPIOB, LEDDP_PIN);
@@ -336,9 +358,9 @@ void Display_Handle(uint8_t in_air_temp_num, uint8_t in_sol_temp_num, uint8_t in
 			if (disp_times2 <= 0)
 			{
 				if (sFWDS201_t.temp_unit == CELSIUS)
-					show_sol_temp = sFWDS201_t.system_parameter.sol_actual_temp;
+					show_sol_temp = sFWDS201_t.system_parameter.sol_actual_temp - sFWDS201_t.system_parameter.sol_cal_data;
 				else if (sFWDS201_t.temp_unit == FAHRENHEIT)
-					show_sol_temp = (sFWDS201_t.system_parameter.sol_actual_temp * 9 / 5) + 32;
+					show_sol_temp = ((sFWDS201_t.system_parameter.sol_actual_temp - sFWDS201_t.system_parameter.sol_cal_data) * 9 / 5) + 32;
 			}
 			buffer_disp_sol_temp[0] = show_sol_temp / 100;
 			buffer_disp_sol_temp[1] = (show_sol_temp / 10) % 10;
@@ -396,9 +418,9 @@ void Display_Handle(uint8_t in_air_temp_num, uint8_t in_sol_temp_num, uint8_t in
 			if (disp_times <= 0)
 			{
 			if (sFWDS201_t.temp_unit == CELSIUS)
-				show_air_temp = sFWDS201_t.system_parameter.air_actual_temp;
+				show_air_temp = sFWDS201_t.system_parameter.air_actual_temp - sFWDS201_t.system_parameter.air_cal_data;
 			else if (sFWDS201_t.temp_unit == FAHRENHEIT)
-				show_air_temp = (sFWDS201_t.system_parameter.air_actual_temp * 9 / 5) + 32;
+				show_air_temp = ((sFWDS201_t.system_parameter.air_actual_temp - sFWDS201_t.system_parameter.air_cal_data) * 9 / 5) + 32;
 			}
 			buffer_disp_air_temp[0] = show_air_temp / 100;
 			buffer_disp_air_temp[1] = (show_air_temp / 10) % 10;
@@ -470,45 +492,45 @@ void Display_Handle(uint8_t in_air_temp_num, uint8_t in_sol_temp_num, uint8_t in
 
 	disp_digit_all();
 
-	if (sFWDS201_t.general_parameter.set_air_temp_time != 0x00)
-	{
-		sFWDS201_t.general_parameter.set_air_temp_time--;
-		if (sFWDS201_t.general_parameter.save_air_ch_flag == false)
-			sFWDS201_t.display_air_temp_number = DISPLAY_SET;
-		if (sFWDS201_t.general_parameter.set_air_temp_time <= 0x00)
-		{
-			sFWDS201_t.general_parameter.set_air_temp_time = 0x00;
-			sFWDS201_t.display_air_temp_number = DISPLAY_REAL;
-			if (sFWDS201_t.general_parameter.save_air_ch_flag == true)
-				sFWDS201_t.general_parameter.save_air_ch_flag = false;
-			
-		}
-	}
+//	if (sFWDS201_t.general_parameter.set_air_temp_time != 0x00)
+//	{
+//		sFWDS201_t.general_parameter.set_air_temp_time--;
+//		if (sFWDS201_t.general_parameter.save_air_ch_flag == false)
+//			sFWDS201_t.display_air_temp_number = DISPLAY_SET;
+//		if (sFWDS201_t.general_parameter.set_air_temp_time <= 0x00)
+//		{
+//			sFWDS201_t.general_parameter.set_air_temp_time = 0x00;
+//			sFWDS201_t.display_air_temp_number = DISPLAY_REAL;
+//			if (sFWDS201_t.general_parameter.save_air_ch_flag == true)
+//				sFWDS201_t.general_parameter.save_air_ch_flag = false;
+//			
+//		}
+//	}
 
-	if (sFWDS201_t.general_parameter.set_sol_temp_time != 0x00)
-	{
-		sFWDS201_t.general_parameter.set_sol_temp_time--;
-		if (sFWDS201_t.general_parameter.save_sol_ch_flag == false)
-			sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
-		if (sFWDS201_t.general_parameter.set_sol_temp_time <= 0x00)
-		{
-			sFWDS201_t.general_parameter.set_sol_temp_time = 0x00;
-			sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
-			if (sFWDS201_t.general_parameter.save_sol_ch_flag == true)
-				sFWDS201_t.general_parameter.save_sol_ch_flag = false;
-		}
-	}
-	
-	if (sFWDS201_t.general_parameter.set_air_time != 0x00)
-	{
-		sFWDS201_t.general_parameter.set_air_time--;
-		sFWDS201_t.display_air_number = DISPLAY_SET;
-		if (sFWDS201_t.general_parameter.set_air_time <= 0x00)
-		{
-			sFWDS201_t.general_parameter.set_air_time = 0x00;
-			sFWDS201_t.display_air_number = DISPLAY_SET;
-		}
-	}
+//	if (sFWDS201_t.general_parameter.set_sol_temp_time != 0x00)
+//	{
+//		sFWDS201_t.general_parameter.set_sol_temp_time--;
+//		if (sFWDS201_t.general_parameter.save_sol_ch_flag == false)
+//			sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
+//		if (sFWDS201_t.general_parameter.set_sol_temp_time <= 0x00)
+//		{
+//			sFWDS201_t.general_parameter.set_sol_temp_time = 0x00;
+//			sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
+//			if (sFWDS201_t.general_parameter.save_sol_ch_flag == true)
+//				sFWDS201_t.general_parameter.save_sol_ch_flag = false;
+//		}
+//	}
+//	
+//	if (sFWDS201_t.general_parameter.set_air_time != 0x00)
+//	{
+//		sFWDS201_t.general_parameter.set_air_time--;
+//		sFWDS201_t.display_air_number = DISPLAY_SET;
+//		if (sFWDS201_t.general_parameter.set_air_time <= 0x00)
+//		{
+//			sFWDS201_t.general_parameter.set_air_time = 0x00;
+//			sFWDS201_t.display_air_number = DISPLAY_SET;
+//		}
+//	}
 }
 
 /* 设置界面显示 */
@@ -591,7 +613,7 @@ void dispmenu_pageoption(uint8_t in_number)
 		}
 		case 7:
 		{
-			if(in_number == 0x0c)
+			if(in_number == 0x0A)
 				TAST[1]();
 			else
 				TAST[0]();
@@ -600,7 +622,7 @@ void dispmenu_pageoption(uint8_t in_number)
 		}
 		case 8:
 		{
-			if(in_number == 0x0c)
+			if(in_number == 0x0A)
 				TAST[0]();
 			else
 				TAST[in_number]();
@@ -731,11 +753,11 @@ void led_handle(void)
 		Disp_Set_Handle(sFWDS201_t.set_interface_number);
 	if(sFWDS201_t.temp_unit == CELSIUS)
 	{
-		gpio_bits_set(GPIOC,GPIO_PINS_0);
+		gpio_bits_reset(GPIOC,GPIO_PINS_0);
 	}
 	else if(sFWDS201_t.temp_unit == FAHRENHEIT)
 	{
-		gpio_bits_reset(GPIOC,GPIO_PINS_0);
+		gpio_bits_set(GPIOC,GPIO_PINS_0);
 	}
 	
 }

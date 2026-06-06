@@ -15,7 +15,8 @@ static void get_sol_handle_error_state(void);
 // static voidtrol(DS201_Handle *this);
 static void relay_control(DS201_Handle *this);
 static void relay_control(DS201_Handle *this);
-
+void display_temp_air_handle(void);
+void display_temp_sol_handle(void);
 int8_t off_set_buff[41] = {22, 21, 21, 21, 21, 21, 21, 21, 20, 20,
 						   21, 21, 21, 20, 19, 19, 19, 19, 18, 17,
 						   17, 16, 16, 15, 14, 13, 12, 11, (11), (10 - 2),
@@ -33,18 +34,180 @@ void output_handle(void)
 	/* air gun handle */
 	get_air_handle_position(&sFWDS201_t);
 	get_air_handle_work_state(&sFWDS201_t);
-	//    get_air_handle_error_state(&sFWDS201_t);
+	get_air_handle_error_state(&sFWDS201_t);
 	relay_control(&sFWDS201_t);
-	
+	display_temp_air_handle();
 	
 	/* sol iron handle */
 	get_sol_handle_state();
-//	get_sol_handle_error_state();
+	get_sol_handle_error_state();
+	display_temp_sol_handle();
+	
+	
 	
 	
 }
 
+void display_temp_air_handle(void)
+{
+	static bool first_time = false;
+	static int save_time = SAVE_CH_TIME;
+	static uint8_t in_first = false;
+	
+	/* temp display */
+	if(sFWDS201_t.general_parameter.save_air_ch_flag == false)
+	{
+		if (sFWDS201_t.general_parameter.set_air_temp_time != 0x00)
+		{
+			first_time = false;
+			sFWDS201_t.general_parameter.set_air_temp_time--;
+			if (sFWDS201_t.general_parameter.save_air_ch_flag == false)
+				sFWDS201_t.display_air_temp_number = DISPLAY_SET;
+		}
+		else
+		{
+			if(sFWDS201_t.air_work_handle_state != HANDLE_SLEEP && sFWDS201_t.airgun_handle_error_state == HANDLE_OK)
+			{
+				if(sFWDS201_t.display_lock_state == LOCK)
+				{
+					sFWDS201_t.general_parameter.set_air_temp_time = 0x00; 
+					if(sFWDS201_t.system_parameter.air_actual_temp <= (sFWDS201_t.system_parameter.air_set_temp + 5) && 
+						sFWDS201_t.system_parameter.air_actual_temp >= (sFWDS201_t.system_parameter.air_set_temp - 5))
+					{
+							sFWDS201_t.system_parameter.air_last_set_temp = 0x00;
+							sFWDS201_t.system_parameter.air_last_set_temp_f_display = 0x00;
+							first_time = true;
+						sFWDS201_t.display_air_temp_number = DISPLAY_SET;
+					}
+					else
+					{
+						first_time = false;
+						sFWDS201_t.display_air_temp_number = DISPLAY_REAL;
+					}
+				}
+				else
+				{
+					sFWDS201_t.display_air_temp_number = DISPLAY_REAL;
+				}
+			}
+			else if(sFWDS201_t.airgun_handle_error_state != HANDLE_OK)
+			{
+				sFWDS201_t.display_air_temp_number = DISPLAY_ERR;
+				sFWDS201_t.display_air_number = DISPLAY_ERR;
+			}
+			else	
+				first_time = false;
+		}
+		
+		/* air display */
+		if (sFWDS201_t.general_parameter.set_air_time != 0x00)
+		{
+			sFWDS201_t.general_parameter.set_air_time--;
+			sFWDS201_t.display_air_number = DISPLAY_SET;
+			
+		}
+		else
+		{
+			if(sFWDS201_t.airgun_handle_error_state != HANDLE_OK)
+			{
+				sFWDS201_t.display_air_number = DISPLAY_ERR;
+			}
+			else
+			{
+				sFWDS201_t.general_parameter.set_air_time = 0x00;
+//				sFWDS201_t.display_air_number = DISPLAY_SET;
+			}
+		}
+	}
+	else
+	{
+		if(sFWDS201_t.general_parameter.save_air_ch_flag == true)
+		{
+			save_time--;
+			if(save_time <= 0x00)
+			{
+				save_time = SAVE_CH_TIME;
+				sFWDS201_t.general_parameter.save_air_ch_flag = false;
+			}
+			else
+			{
+				sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
+				sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
+			}
+			
+		}
+	}
+}
 
+
+void display_temp_sol_handle(void)
+{
+	static bool first_time = false;
+	static int save_time = SAVE_CH_TIME;
+	static uint8_t in_first = false;
+	
+	/* temp display */
+	if(sFWDS201_t.general_parameter.save_sol_ch_flag == false)
+	{
+		if (sFWDS201_t.general_parameter.set_sol_temp_time != 0x00)
+		{
+			first_time = false;
+			sFWDS201_t.general_parameter.set_sol_temp_time--;
+			if (sFWDS201_t.general_parameter.save_sol_ch_flag == false && sFWDS201_t.sol_work_handle_state != HANDLE_SLEEP)
+				sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
+		}
+		else
+		{
+			if(sFWDS201_t.sol_work_handle_state != HANDLE_SLEEP && sFWDS201_t.sol_handle_error_state == HANDLE_OK)
+			{
+				if(sFWDS201_t.display_lock_state == LOCK)
+				{
+					sFWDS201_t.general_parameter.set_air_temp_time = 0x00; 
+					if(sFWDS201_t.system_parameter.sol_actual_temp <= (sFWDS201_t.system_parameter.sol_set_temp + 5) && 
+						sFWDS201_t.system_parameter.sol_actual_temp >= (sFWDS201_t.system_parameter.sol_set_temp - 5))
+					{
+							sFWDS201_t.system_parameter.sol_last_set_temp = 0x00;
+							sFWDS201_t.system_parameter.sol_last_set_temp_f_display = 0x00;
+							first_time = true;
+						sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
+					}
+					else
+					{
+						first_time = false;
+						sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
+					}
+				}
+				else
+				{
+					sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
+				}
+			}
+			else if(sFWDS201_t.sol_handle_error_state != HANDLE_OK)
+			{
+				sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
+			}
+			else	
+				first_time = false;
+		}
+	}
+	else
+	{
+		if(sFWDS201_t.general_parameter.save_sol_ch_flag == true)
+		{
+			save_time--;
+			if(save_time <= 0x00)
+			{
+				save_time = SAVE_CH_TIME;
+				sFWDS201_t.general_parameter.save_sol_ch_flag = false;
+			}
+			else
+			{
+				sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
+			}
+			
+		}
+	}
+}
 
 
 static void get_air_handle_position(DS201_Handle *this)
@@ -280,7 +443,8 @@ void fan_control(DS201_Handle *this)
 				 this->air_handle_position == IN_POSSITION &&
 				 this->sleep_state == SLEEP_OPEN)
 		{
-			sFWDS201_t.display_air_number = DISPLAY_REAL;
+			if(sFWDS201_t.general_parameter.set_air_time == 0x00)
+				sFWDS201_t.display_air_number = DISPLAY_REAL;
 			/* wait for next time open */
 			if (fan_run_flag)
 			{
@@ -296,7 +460,7 @@ void fan_control(DS201_Handle *this)
 				if (fan_run_flag == false)
 				{
 					/* open fan output with a half of max set val*/
-					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 0.87 + 81);
+					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 1.45 + 81);
 				}
 			}
 			else if (this->system_parameter.air_actual_temp >= 70 && this->system_parameter.air_actual_temp < 250)
@@ -305,7 +469,7 @@ void fan_control(DS201_Handle *this)
 				{
 					/* open fan output with actual temp change*/
 					this->system_parameter.sleep_air_data = this->system_parameter.air_actual_temp * 0.4;
-					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 0.87 + 81);
+					tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.sleep_air_data * 1.45 + 81);
 				}
 			}
 			else
@@ -330,14 +494,14 @@ void fan_control(DS201_Handle *this)
 			}
 
 			/* open fan output with user set val */
-			tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.air_data * 0.87 + 81);
+			tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, this->system_parameter.air_data * 1.45 + 81);
 		}
 
 		break;
 
 	case 1:
 		/* open fan output with max set val */
-		tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, MAX_SET_AIR * 0.87 + 81);
+		tmr_channel_value_set(TMR2, TMR_SELECT_CHANNEL_3, MAX_SET_AIR * 1.45 + 81);
 
 		if (this->airgun_handle_error_state == HANDLE_OK)
 		{
@@ -516,7 +680,7 @@ void air_pwm_control(DS201_Handle *this)
 			{
 				if (temp <= (air_set_temp + 5) && temp >= (air_set_temp - 5))
 				{
-					sFWDS201_t.hot_state = PID_POWER;
+					sFWDS201_t.air_hot_state = PID_POWER;
 					delay_time++;
 					if (delay_time >= 15)
 					{
@@ -537,19 +701,19 @@ void air_pwm_control(DS201_Handle *this)
 				{
 					change_flag = false;
 					delay_time = 0;
-					sFWDS201_t.hot_state = FULL_POWER;
+					sFWDS201_t.air_hot_state = FULL_POWER;
 				}
 				this->system_parameter.air_pwm_out = PID_Position_Calc(&air_handle_pid, air_set_temp, temp);
 			}
 			else if (temp > (air_set_temp + PID_RANGE))
 			{
 				this->system_parameter.air_pwm_out = 0;
-				sFWDS201_t.hot_state = ZERO_POWER;
+				sFWDS201_t.air_hot_state = ZERO_POWER;
 			}
 			else if (temp < (air_set_temp - PID_RANGE))
 			{
 				this->system_parameter.air_pwm_out = MAX_AIR_PWM_OUTPUT;
-				sFWDS201_t.hot_state = FULL_POWER;
+				sFWDS201_t.air_hot_state = FULL_POWER;
 			}
 		}
 	}
@@ -604,6 +768,7 @@ void sol_pwm_control(void)
 		if (temp <= (sFWDS201_t.system_parameter.sol_set_temp + 30) &&
 			temp >= (sFWDS201_t.system_parameter.sol_set_temp - 30))
 		{
+			sFWDS201_t.sol_hot_state = PID_POWER;
 			sFWDS201_t.system_parameter.sol_pwm_out = PID_Position_Calc(&sol_210_handle_pid, sFWDS201_t.system_parameter.sol_set_temp, temp);
 			
 			// 新增：进入恒温区，且未响过蜂鸣器 → 响一声
@@ -620,12 +785,14 @@ void sol_pwm_control(void)
 			PID_Clear_I(&sol_210_handle_pid);
 			sFWDS201_t.system_parameter.sol_pwm_out = 0;
 			constant_temp_flag = false; // 超温，重置恒温标志
+			sFWDS201_t.sol_hot_state = ZERO_POWER;
 		}
 		else
 		{
 			PID_Clear_I(&sol_210_handle_pid);
 			sFWDS201_t.system_parameter.sol_pwm_out = MAX_SOL210_PWM_OUTPUT;
 			constant_temp_flag = false; // 升温中，重置恒温标志
+			sFWDS201_t.sol_hot_state = FULL_POWER;
 		}
 	}
 	else if (sFWDS201_t.sol_work_handle_state == HANDLE_SLEEP)
@@ -664,11 +831,6 @@ void sol_sleep_control(void)
 			// 立即进入休眠状态（PWM 停止加热）
 			sFWDS201_t.sol_work_handle_state = HANDLE_SLEEP;
 			sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
-//			// 只有温度 <200 才显示 SLP
-//			if (temp_below_200)
-//			{
-//				sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
-//			}
 		}
 		else
 		{
@@ -697,11 +859,13 @@ void sol_sleep_control(void)
 					sFWDS201_t.sol_work_handle_state = HANDLE_SLEEP;
 
 					// 温度低于200才显示SLP
-					if (temp_below_200)
+					if (temp_below_200 && sFWDS201_t.sol_work_handle_state == HANDLE_SLEEP)
 					{
 						sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
 					}
 				}
+				else if (sFWDS201_t.sol_work_handle_state == HANDLE_SLEEP)
+					sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
 			}
 		}
 	}
@@ -713,9 +877,10 @@ void sol_sleep_control(void)
 			first_in = true;
 			sFWDS201_t.sol_work_handle_state = HANDLE_WORKING;
 			sFWDS201_t.system_parameter.sleep_time_count = sFWDS201_t.system_parameter.set_sleep_time;
-			sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
+//			sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
 			time_count_ms = 0;
 			time_count_s = 0;
+			sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES;
 		}
 	}
 
@@ -743,10 +908,10 @@ void sol_sleep_control(void)
 					sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
 				}
 			}
-			else
-			{
-				sFWDS201_t.sol_work_handle_state = HANDLE_WORKING;
-			}
+//			else
+//			{
+//				sFWDS201_t.sol_work_handle_state = HANDLE_WORKING;
+//			}
 		}
 		else
 		{
@@ -777,7 +942,7 @@ void sol_rpc_control(void)
 	{
 		rpc_times = 0x00;
 		sFWDS201_t.sol_handle_rpc_state = NOT_IN_RPC;
-		sFWDS201_t.sol_work_handle_state = HANDLE_WORKING;
+//		sFWDS201_t.sol_work_handle_state = HANDLE_WORKING;
 	}
 }
 
@@ -829,7 +994,7 @@ void get_sol_handle_state(void)
 	}
 	
 	/* check handle type */
-	if (gpio_input_data_bit_read(GPIOA, GPIO_PINS_7) == false)
+	if (gpio_input_data_bit_read(GPIOC, GPIO_PINS_1) == false)
 	{
 		sFWDS201_t.sol_handle_state = SOL_HANDLE_210;
 	}

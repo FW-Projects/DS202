@@ -212,10 +212,7 @@ void key_handle(void)
 {
     get_key();
 	
-	if (key_event[0] != KE_NONE ||
-		key_event[1] != KE_NONE ||
-		key_event[2] != KE_NONE ||
-		key_event[3] != KE_NONE ||
+	if (key_event[3] != KE_NONE ||
 		key_event[4] != KE_NONE ||
 		key_event[5] != KE_NONE)
 	{

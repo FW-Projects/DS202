@@ -5,7 +5,7 @@
 
 #define SOFTWARE_VERSION_BAI 1
 #define SOFTWARE_VERSION_SHI 0
-#define SOFTWARE_VERSION_GE  2
+#define SOFTWARE_VERSION_GE  3
 
 #define HARDWARE_VERSION_BAI 1
 #define HARDWARE_VERSION_SHI 0
@@ -37,7 +37,7 @@
 
 #define PID_RANGE 100
 
-#define MAX_SET_AIR 200
+#define MAX_SET_AIR 120
 #define MIN_SET_AIR 5
 
 #define MAX_ACTUAL_AIR 534
@@ -56,7 +56,7 @@
 
 #define ACTUAL_TEMP_REFRESH_TIME 200
 
-#define SET_SHOW_TIMES 1000
+#define SET_SHOW_TIMES 250
 
 #define SET_TIME 10000;
 
@@ -252,7 +252,8 @@ typedef struct
 	int set_air_time;
 	bool save_air_ch_flag;
 	bool save_sol_ch_flag;
-	bool dp_flash_flag;
+	bool air_dp_flash_flag;
+	bool sol_dp_flash_flag;
 } system_state_t;
 
 typedef struct
@@ -301,7 +302,8 @@ typedef struct
 	bool init_flag;
 	bool fan_run_flag;
 	bool relay_open_flag;
-	hot_state_e hot_state;
+	hot_state_e air_hot_state;
+	hot_state_e sol_hot_state;
 
 } DS201_Handle;
 
