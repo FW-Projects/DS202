@@ -195,6 +195,26 @@
           <WinNumber>1</WinNumber>
           <ItemText>sFWDS201_t.general_parameter.set_sol_temp_time</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sFWDS201_t.sol_work_handle_state</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sFWDS201_t.system_parameter.sol_error_time</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sFWDS201_t.display_lock_state</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sFWDS201_t.system_parameter.air_cal_data</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

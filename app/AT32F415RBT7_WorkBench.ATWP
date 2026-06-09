@@ -95,7 +95,7 @@
             <ModeSub name="WDT_State" value="TRUE"/>
         </Mode>
         <Parameters>
-            <ParametersSub name="Reload" value="99"/>
+            <ParametersSub name="Prescaler" value="WDT_CLK_DIV_8"/>
         </Parameters>
     </WDT>
     <DMA>

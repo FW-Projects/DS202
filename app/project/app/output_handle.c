@@ -71,8 +71,8 @@ void display_temp_air_handle(void)
 				if(sFWDS201_t.display_lock_state == LOCK)
 				{
 					sFWDS201_t.general_parameter.set_air_temp_time = 0x00; 
-					if(sFWDS201_t.system_parameter.air_actual_temp <= (sFWDS201_t.system_parameter.air_set_temp + 5) && 
-						sFWDS201_t.system_parameter.air_actual_temp >= (sFWDS201_t.system_parameter.air_set_temp - 5))
+					if((sFWDS201_t.system_parameter.air_actual_temp - sFWDS201_t.system_parameter.air_cal_data ) <= (sFWDS201_t.system_parameter.air_set_temp + 5) && 
+						(sFWDS201_t.system_parameter.air_actual_temp - sFWDS201_t.system_parameter.air_cal_data ) >= (sFWDS201_t.system_parameter.air_set_temp - 5))
 					{
 							sFWDS201_t.system_parameter.air_last_set_temp = 0x00;
 							sFWDS201_t.system_parameter.air_last_set_temp_f_display = 0x00;
@@ -186,6 +186,10 @@ void display_temp_sol_handle(void)
 			{
 				sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
 			}
+			else if(sFWDS201_t.sol_work_handle_state == HANDLE_SLEEP)
+			{
+				sFWDS201_t.display_sol_temp_number = DISPLAY_SLP;
+			}
 			else	
 				first_time = false;
 		}
@@ -199,6 +203,7 @@ void display_temp_sol_handle(void)
 			{
 				save_time = SAVE_CH_TIME;
 				sFWDS201_t.general_parameter.save_sol_ch_flag = false;
+				
 			}
 			else
 			{
@@ -444,7 +449,10 @@ void fan_control(DS201_Handle *this)
 				 this->sleep_state == SLEEP_OPEN)
 		{
 			if(sFWDS201_t.general_parameter.set_air_time == 0x00)
+			{
 				sFWDS201_t.display_air_number = DISPLAY_REAL;
+				sFWDS201_t.system_parameter.last_sleep_air_data = 0xff;
+			}
 			/* wait for next time open */
 			if (fan_run_flag)
 			{
@@ -893,7 +901,7 @@ void sol_sleep_control(void)
 	if (wake_up_flag)
 	{
 		sFWDS201_t.system_parameter.waken_time_count++;
-		if (sFWDS201_t.system_parameter.waken_time_count >= 3000)
+		if (sFWDS201_t.system_parameter.waken_time_count >= 1500)
 		{
 			wake_up_flag = false;
 			sFWDS201_t.system_parameter.waken_time_count = 0;
@@ -1020,25 +1028,23 @@ static void get_sol_handle_error_state(void)
 				}
 			}
 			
-			if (sFWDS201_t.system_parameter.sol_error_time >= ERROR_TIME)
+			if (sFWDS201_t.sol_handle_state == SOL_HANDLE_NO && sFWDS201_t.system_parameter.sol_error_time >= ERROR_TIME)
 			{
-				if (sFWDS201_t.sol_handle_state == SOL_HANDLE_NO)
-				{
-					sFWDS201_t.sol_handle_error_state = HANDLE_NO_ERR;
-					sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
-				}
-				else if (sFWDS201_t.system_parameter.sol_actual_temp > MAX_ACTUAL_TEMP)
-				{
-					sFWDS201_t.sol_handle_error_state = HANDLE_OVER_TEMP_ERR;
-					sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
-				}
-				else if (sFWDS201_t.system_parameter.sol_actual_temp < MIN_ACTUAL_TEMP &&
-						sFWDS201_t.sol_handle_position == NOT_IN_POSSITION &&
-						sFWDS201_t.sol_handle_error_state != HANDLE_OVER_CURRENT)
-				{
-					sFWDS201_t.sol_handle_error_state = HANDLE_LOW_TEMP_ERR;
-					sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
-				}
+				sFWDS201_t.sol_handle_error_state = HANDLE_NO_ERR;
+				sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
+			}
+			else if (sFWDS201_t.system_parameter.sol_actual_temp > MAX_ACTUAL_TEMP && sFWDS201_t.system_parameter.sol_error_time >= ERROR_TIME)
+			{
+				sFWDS201_t.sol_handle_error_state = HANDLE_OVER_TEMP_ERR;
+				sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
+			}
+			else if (sFWDS201_t.system_parameter.sol_actual_temp < MIN_ACTUAL_TEMP &&
+					sFWDS201_t.sol_handle_position == NOT_IN_POSSITION &&
+					sFWDS201_t.sol_handle_error_state != HANDLE_OVER_CURRENT &&
+					sFWDS201_t.system_parameter.sol_error_time >= ERROR_TIME / 2)
+			{
+				sFWDS201_t.sol_handle_error_state = HANDLE_LOW_TEMP_ERR;
+				sFWDS201_t.display_sol_temp_number = DISPLAY_ERR;
 			}
 		}
 		else

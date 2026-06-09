@@ -228,12 +228,12 @@ void SysTick_Handler(void)
 	static bool first_in = false;
 	static uint8_t sol_pid_run_time = 10;
 	static uint8_t fan_run_time = 1;
-	static int dp_time = TIME_1S;
+	static int dp_time = TIME_500MS;
 	
 	dp_time--;
 	if(dp_time < 0)
 	{
-		dp_time  = TIME_1S;
+		dp_time  = TIME_500MS;
 		sFWDS201_t.general_parameter.air_dp_flash_flag = !sFWDS201_t.general_parameter.air_dp_flash_flag;
 	    sFWDS201_t.general_parameter.sol_dp_flash_flag = !sFWDS201_t.general_parameter.sol_dp_flash_flag;
 	}
