@@ -34,6 +34,7 @@ EC11_AnalyzeResult g_air_ec11_analyze_result;
  */
 void ec11_handle(void)
 {
+	static char ec_times = 100;
 	// 风枪温度EC11处理
 	EC11_ScanResult air_temp_scan_result = EC11_Scan(&air_temp_ec11);
 	air_temp_ec11_analyze_result = EC11_Analyze(&air_temp_ec11, air_temp_scan_result);
@@ -51,6 +52,22 @@ void ec11_handle(void)
 	g_air_ec11_analyze_result = EC11_Analyze(&air_ec11, air_scan_result);
 	air_ec11_get_event(g_air_ec11_analyze_result);
 	air_ec11_event_handle();
+	
+	if(g_air_ec11_analyze_result != EC11_ANALYZE_NO_ACTION || air_temp_ec11_analyze_result != EC11_ANALYZE_NO_ACTION)
+	{
+		sFWDS201_t.general_parameter.ec_setting_flag = true;
+	}
+	
+	if(sFWDS201_t.general_parameter.ec_setting_flag == true)
+	{
+		ec_times--;
+		
+		if(ec_times <= 0x00)
+		{
+			ec_times = 100;
+			sFWDS201_t.general_parameter.ec_setting_flag = false;
+		}
+	}
 	
 	
 }
@@ -408,15 +425,18 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_SHORT_CLICK:
-		if (sFWDS201_t.set_interface_number == EXIT)
+		if(sFWDS201_t.set_flag == TRUE)
 		{
-			air_temp_ec11_event = EXIT_SET;
+			if (sFWDS201_t.set_interface_number == EXIT)
+			{
+				air_temp_ec11_event = EXIT_SET;
+			}
+			else if (sFWDS201_t.set_interface_number == RESET_RUN)
+			{
+				air_temp_ec11_event = RESET_DS01_VALUE;
+			}
+			sbeep.cmd = BEEP_SHORT;
 		}
-		else if (sFWDS201_t.set_interface_number == RESET_RUN)
-		{
-			air_temp_ec11_event = RESET_DS01_VALUE;
-		}
-		sbeep.cmd = BEEP_SHORT;
 		break;
 	case EC11_ANALYZE_DOUBLE_CLICK:
 
@@ -432,7 +452,7 @@ void sol_temp_ec11_get_event(EC11_AnalyzeResult state)
 	default:
 		break;
 	}
-	if(state != EC11_ANALYZE_NO_ACTION)
+	if(state != EC11_ANALYZE_NO_ACTION && state != EC11_ANALYZE_SHORT_CLICK)
 	{
 		if (sFWDS201_t.sol_work_handle_state == HANDLE_SLEEP)
 		{

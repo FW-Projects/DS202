@@ -137,8 +137,8 @@ static void get_key(void)
             sFWDS201_t.general_parameter.air_ch = 1;
             sFWDS201_t.display_air_temp_number = DISPLAY_SAVE_CH;
             sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
-            sFWDS201_t.general_parameter.set_air_temp_time = SET_SHOW_TIMES * 2;
-            sFWDS201_t.general_parameter.set_air_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_air_temp_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_air_time = SET_SHOW_TIMES * 2;
             sFWDS201_t.general_parameter.save_air_ch_flag = true;
             sbeep.cmd = BEEP_LONG;
             set_done = TRUE;
@@ -151,8 +151,8 @@ static void get_key(void)
             sFWDS201_t.general_parameter.air_ch = 2;
             sFWDS201_t.display_air_temp_number = DISPLAY_SAVE_CH;
             sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
-            sFWDS201_t.general_parameter.set_air_temp_time = SET_SHOW_TIMES * 2;
-            sFWDS201_t.general_parameter.set_air_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_air_temp_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_air_time = SET_SHOW_TIMES * 2;
             sFWDS201_t.general_parameter.save_air_ch_flag = true;
             sbeep.cmd = BEEP_LONG;
             set_done = TRUE;
@@ -165,8 +165,8 @@ static void get_key(void)
             sFWDS201_t.general_parameter.air_ch = 3;
             sFWDS201_t.display_air_temp_number = DISPLAY_SAVE_CH;
             sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
-            sFWDS201_t.general_parameter.set_air_temp_time = SET_SHOW_TIMES * 2;
-            sFWDS201_t.general_parameter.set_air_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_air_temp_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_air_time = SET_SHOW_TIMES * 2;
             sFWDS201_t.general_parameter.save_air_ch_flag = true;
             sbeep.cmd = BEEP_LONG;
             set_done = TRUE;
@@ -178,7 +178,7 @@ static void get_key(void)
             sFWDS201_t.system_parameter.ch1_sol_set_temp = sFWDS201_t.system_parameter.sol_set_temp;
             sFWDS201_t.general_parameter.sol_ch = 1;
             sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
-            sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES * 2;
             sFWDS201_t.general_parameter.save_sol_ch_flag = true;
             sbeep.cmd = BEEP_LONG;
             set_done = TRUE;
@@ -189,8 +189,8 @@ static void get_key(void)
             sFWDS201_t.system_parameter.ch2_sol_set_temp = sFWDS201_t.system_parameter.sol_set_temp;
             sFWDS201_t.general_parameter.sol_ch = 2;
             sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
-            sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES * 2;
-            sFWDS201_t.general_parameter.save_sol_ch_flag = true;
+//			sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES * 2;
+			sFWDS201_t.general_parameter.save_sol_ch_flag = true;
             sbeep.cmd = BEEP_LONG;
             set_done = TRUE;
         }
@@ -200,7 +200,7 @@ static void get_key(void)
             sFWDS201_t.system_parameter.ch3_sol_set_temp = sFWDS201_t.system_parameter.sol_set_temp;
             sFWDS201_t.general_parameter.sol_ch = 3;
             sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
-            sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES * 2;
+//            sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES * 2;
             sFWDS201_t.general_parameter.save_sol_ch_flag = true;
             sbeep.cmd = BEEP_LONG;
             set_done = TRUE;
@@ -210,6 +210,7 @@ static void get_key(void)
 
 void key_handle(void)
 {
+	static char key_times = 10;
     get_key();
 	
 	if (key_event[3] != KE_NONE ||
@@ -223,6 +224,27 @@ void key_handle(void)
 		else if (sFWDS201_t.sol_work_handle_state == HANDLE_WAKEN)
 		{
 			sFWDS201_t.system_parameter.waken_time_count = 0;
+		}
+	}
+	
+	if(key_event[0] != KE_NONE  ||
+		key_event[1] != KE_NONE ||
+		key_event[2] != KE_NONE ||
+		key_event[3] != KE_NONE ||
+		key_event[4] != KE_NONE ||
+		key_event[5] != KE_NONE)
+	{
+		sFWDS201_t.general_parameter.key_setting_flag = true;
+	}
+	
+	if(sFWDS201_t.general_parameter.key_setting_flag == true)
+	{
+		key_times--;
+		
+		if(key_times <= 0x00)
+		{
+			key_times = 10;
+			sFWDS201_t.general_parameter.key_setting_flag = false;
 		}
 	}
 }

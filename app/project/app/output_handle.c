@@ -37,6 +37,7 @@ void output_handle(void)
 	get_air_handle_error_state(&sFWDS201_t);
 	relay_control(&sFWDS201_t);
 	display_temp_air_handle();
+	fan_control(&sFWDS201_t);
 	
 	/* sol iron handle */
 	get_sol_handle_state();
@@ -95,6 +96,11 @@ void display_temp_air_handle(void)
 				sFWDS201_t.display_air_temp_number = DISPLAY_ERR;
 				sFWDS201_t.display_air_number = DISPLAY_ERR;
 			}
+			else if(sFWDS201_t.air_work_handle_state == HANDLE_SLEEP)
+			{
+				sFWDS201_t.display_air_temp_number = DISPLAY_SLP;
+				sFWDS201_t.display_air_number = DISPLAY_SLP;
+			}
 			else	
 				first_time = false;
 		}
@@ -121,20 +127,16 @@ void display_temp_air_handle(void)
 	}
 	else
 	{
-		if(sFWDS201_t.general_parameter.save_air_ch_flag == true)
+		save_time--;
+		if(save_time <= 0x00)
 		{
-			save_time--;
-			if(save_time <= 0x00)
-			{
-				save_time = SAVE_CH_TIME;
-				sFWDS201_t.general_parameter.save_air_ch_flag = false;
-			}
-			else
-			{
-				sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
-				sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
-			}
-			
+			save_time = SAVE_CH_TIME;
+			sFWDS201_t.general_parameter.save_air_ch_flag = false;
+		}
+		else
+		{
+			sFWDS201_t.display_air_temp_number = DISPLAY_SAVE_CH;
+			sFWDS201_t.display_air_number = DISPLAY_SAVE_CH;
 		}
 	}
 }
@@ -163,8 +165,8 @@ void display_temp_sol_handle(void)
 				if(sFWDS201_t.display_lock_state == LOCK)
 				{
 					sFWDS201_t.general_parameter.set_air_temp_time = 0x00; 
-					if(sFWDS201_t.system_parameter.sol_actual_temp <= (sFWDS201_t.system_parameter.sol_set_temp + 5) && 
-						sFWDS201_t.system_parameter.sol_actual_temp >= (sFWDS201_t.system_parameter.sol_set_temp - 5))
+					if(sFWDS201_t.system_parameter.sol_actual_temp <= (sFWDS201_t.system_parameter.sol_set_temp + 10) && 
+						sFWDS201_t.system_parameter.sol_actual_temp >= (sFWDS201_t.system_parameter.sol_set_temp - 10))
 					{
 							sFWDS201_t.system_parameter.sol_last_set_temp = 0x00;
 							sFWDS201_t.system_parameter.sol_last_set_temp_f_display = 0x00;
@@ -203,6 +205,10 @@ void display_temp_sol_handle(void)
 			{
 				save_time = SAVE_CH_TIME;
 				sFWDS201_t.general_parameter.save_sol_ch_flag = false;
+				if(sFWDS201_t.sol_work_handle_state == HANDLE_WAKEN)
+				{
+					sFWDS201_t.sol_work_handle_state = HANDLE_SLEEP;
+				}
 				
 			}
 			else
@@ -217,13 +223,26 @@ void display_temp_sol_handle(void)
 
 static void get_air_handle_position(DS201_Handle *this)
 {
+	static uint8_t test_time = 0,test_time1 = 0;
 	if (gpio_input_data_bit_read(GPIOC, GPIO_PINS_2))
 	{
-		this->air_handle_position = NOT_IN_POSSITION;
+		test_time = 0;
+		test_time1++;
+		if(test_time1 > 5)
+		{
+			test_time1 = 0;
+			this->air_handle_position = NOT_IN_POSSITION;
+		}
 	}
 	else
 	{
-		this->air_handle_position = IN_POSSITION;
+		test_time++;
+		test_time1 = 0;
+		if(test_time > 5)
+		{
+			test_time = 0;
+			this->air_handle_position = IN_POSSITION;
+		}
 	}
 }
 
@@ -627,7 +646,7 @@ static void relay_control(DS201_Handle *this)
 	}
 	else if (this->air_work_handle_state == HANDLE_WORKING &&
 			 this->airgun_handle_error_state == HANDLE_OK &&
-			 this->air_handle_position == NOT_IN_POSSITION)
+			 (this->air_handle_position == NOT_IN_POSSITION || this->sleep_state == SLEEP_CLOSE))
 	{
 		/* open relay */
 		gpio_bits_set(GPIOC, GPIO_PINS_4);
@@ -888,7 +907,7 @@ void sol_sleep_control(void)
 //			sFWDS201_t.display_sol_temp_number = DISPLAY_REAL;
 			time_count_ms = 0;
 			time_count_s = 0;
-			sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES;
+//			sFWDS201_t.general_parameter.set_sol_temp_time = SET_SHOW_TIMES;
 		}
 	}
 
@@ -901,7 +920,7 @@ void sol_sleep_control(void)
 	if (wake_up_flag)
 	{
 		sFWDS201_t.system_parameter.waken_time_count++;
-		if (sFWDS201_t.system_parameter.waken_time_count >= 1500)
+		if (sFWDS201_t.system_parameter.waken_time_count >= 1000)
 		{
 			wake_up_flag = false;
 			sFWDS201_t.system_parameter.waken_time_count = 0;
@@ -921,15 +940,15 @@ void sol_sleep_control(void)
 //				sFWDS201_t.sol_work_handle_state = HANDLE_WORKING;
 //			}
 		}
-		else
-		{
-			if(sFWDS201_t.general_parameter.save_sol_ch_flag == true)
-			{
-				sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
-			}
-			else
-	 			sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
-		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+//		else
+//		{
+//			if(sFWDS201_t.general_parameter.save_sol_ch_flag == true)
+//			{
+//				sFWDS201_t.display_sol_temp_number = DISPLAY_SAVE_CH;
+//			}
+//			else
+//	 			sFWDS201_t.display_sol_temp_number = DISPLAY_SET;
+//		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 	}
 }
 

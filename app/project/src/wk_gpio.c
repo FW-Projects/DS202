@@ -51,8 +51,14 @@ void wk_gpio_config(void)
 
   /* gpio input config */
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
-  gpio_init_struct.gpio_pins = JC_COM1_245_PIN | CHECK_REPLACE_PIN | CHECK_START_PIN | SLEEP_G_PIN;
+  gpio_init_struct.gpio_pins = JC_COM1_245_PIN | CHECK_REPLACE_PIN | CHECK_START_PIN;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+  gpio_init(GPIOC, &gpio_init_struct);
+
+  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+  gpio_init_struct.gpio_pins = SLEEP_G_PIN | KEY_CH23_PIN | EC11_L_SOL_PIN | KEY_SET1_PIN | EC11_R_AIR_PIN | 
+                               EC11_L_AIR_PIN;
+  gpio_init_struct.gpio_pull = GPIO_PULL_UP;
   gpio_init(GPIOC, &gpio_init_struct);
 
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
@@ -69,11 +75,6 @@ void wk_gpio_config(void)
   gpio_init_struct.gpio_pins = KEY_CH2_PIN | KEY_CH1_PIN | KEY_SET2_PIN;
   gpio_init_struct.gpio_pull = GPIO_PULL_UP;
   gpio_init(GPIOA, &gpio_init_struct);
-
-  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
-  gpio_init_struct.gpio_pins = KEY_CH23_PIN | EC11_L_SOL_PIN | KEY_SET1_PIN | EC11_R_AIR_PIN | EC11_L_AIR_PIN;
-  gpio_init_struct.gpio_pull = GPIO_PULL_UP;
-  gpio_init(GPIOC, &gpio_init_struct);
 
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
   gpio_init_struct.gpio_pins = KEY_CH22_PIN | KEY_CH21_PIN | EC11_R_HOT_PIN | EC11_L_HOT_PIN | KEY_SET3_PIN | 

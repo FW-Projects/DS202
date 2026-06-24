@@ -245,21 +245,21 @@ void SysTick_Handler(void)
 
   /* add user code begin SysTick_IRQ 1 */
 	
-	if(sFWDS201_t.air_work_handle_state == HANDLE_SLEEP)
-	{
-		fan_control(&sFWDS201_t);
-		sFWDS201_t.fan_run_flag = true;
-	}
-	else
-	{
-		fan_run_time--;
-		if(fan_run_time == 0)
-		{
-			fan_run_time = 5;
-			fan_control(&sFWDS201_t);
-//			sFWHA01_t.fan_run_flag = false;
-		}
-	}
+//	if(sFWDS201_t.air_work_handle_state == HANDLE_SLEEP)
+//	{
+//		fan_control(&sFWDS201_t);
+//		sFWDS201_t.fan_run_flag = true;
+//	}
+//	else
+//	{
+//		fan_run_time--;
+//		if(fan_run_time == 0)
+//		{
+//			fan_run_time = 5;
+//			fan_control(&sFWDS201_t);
+////			sFWHA01_t.fan_run_flag = false;
+//		}
+//	}
 	
 	
 	led_handle();
@@ -369,8 +369,6 @@ void TMR3_GLOBAL_IRQHandler(void)
 	
   /* add user code end TMR3_GLOBAL_IRQ 1 */
 }
-
-
 
 /* add user code begin 1 */
 

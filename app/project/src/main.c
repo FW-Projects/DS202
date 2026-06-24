@@ -247,7 +247,8 @@ void ec11_task(void)
 
 void flash_task(void)
 {
-	FlashProc();
+	if(sFWDS201_t.general_parameter.key_setting_flag == false && sFWDS201_t.general_parameter.ec_setting_flag == false)
+		FlashProc();
 }
 
 void key_task(void)
@@ -266,8 +267,8 @@ void led_task(void)
 
 void output_task(void)
 {
-	output_handle();
-	
+	if(sFWDS201_t.init_flag == TRUE)
+		output_handle();
 }
 
 

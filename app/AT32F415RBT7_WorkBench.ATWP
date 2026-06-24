@@ -129,6 +129,7 @@
             <Parameters name="Label" value="LED_CF"/>
         </Signal>
         <Signal SignalName="GPIO_Input" PinName="PC2">
+            <Parameters name="GPIO_PullType_Set" value="GPIO_PULL_UP"/>
             <Parameters name="Label" value="SLEEP_G"/>
         </Signal>
         <Signal SignalName="GPIO_Output" PinName="PC3">

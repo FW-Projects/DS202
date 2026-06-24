@@ -5,7 +5,7 @@
 
 #define SOFTWARE_VERSION_BAI 1
 #define SOFTWARE_VERSION_SHI 0
-#define SOFTWARE_VERSION_GE  4
+#define SOFTWARE_VERSION_GE  5
 
 #define HARDWARE_VERSION_BAI 1
 #define HARDWARE_VERSION_SHI 0
@@ -48,9 +48,9 @@
 
 #define ERROR_TIME 600
 
-#define MAX_AIR_PWM_OUTPUT 35000
-#define MAX_SOL115_PWM_OUTPUT 1500
-#define MAX_SOL210_PWM_OUTPUT 3333
+#define MAX_AIR_PWM_OUTPUT 48000
+#define MAX_SOL115_PWM_OUTPUT 5000
+#define MAX_SOL210_PWM_OUTPUT 9999
 
 
 
@@ -62,7 +62,7 @@
 
 #define LOCK_RANGE 20
 
-#define SLEEP_TIME 50
+#define SLEEP_TIME 10
 
 #define SLEEP_FAN_DATA 100
 
@@ -254,6 +254,8 @@ typedef struct
 	bool save_sol_ch_flag;
 	bool air_dp_flash_flag;
 	bool sol_dp_flash_flag;
+	bool key_setting_flag;
+	bool ec_setting_flag;
 } system_state_t;
 
 typedef struct

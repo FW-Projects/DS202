@@ -227,7 +227,7 @@ void disp_digit_all(void)
 		case 2:
 		{
 			TAST_BUFF[buffer_disp_sol_temp[2]]();
-			if (sFWDS201_t.sol_handle_position == NOT_IN_POSSITION &&
+			if ((sFWDS201_t.sol_handle_position == NOT_IN_POSSITION || sFWDS201_t.system_parameter.sleep_time_count != 0x00)&&
 				sFWDS201_t.sol_work_handle_state == HANDLE_WORKING &&
 				sFWDS201_t.sol_handle_error_state == HANDLE_OK)
 			{
@@ -293,7 +293,7 @@ void disp_digit_all(void)
 		case 8:
 		{
 			TAST_BUFF[buffer_disp_air_temp[2]]();
-			if (sFWDS201_t.air_handle_position == NOT_IN_POSSITION &&
+			if ((sFWDS201_t.air_handle_position == NOT_IN_POSSITION || sFWDS201_t.sleep_state == SLEEP_CLOSE) &&
 				sFWDS201_t.air_work_handle_state == HANDLE_WORKING &&
 				sFWDS201_t.airgun_handle_error_state == HANDLE_OK)
 			{
